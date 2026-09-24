@@ -48,7 +48,6 @@ try {
     http_response_code(500);
     echo json_encode([
         "id" => 0,
-        "error" => $e->getMessage()
-    ]);
+        "error" => $e->getMessage()]);
 }
 ?>
