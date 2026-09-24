@@ -39,7 +39,7 @@ async function doLogin(event) {
             sessionStorage.setItem("lastName", data.lastName);
 
             // Redirect to dashboard page (to be created)
-            // window.location.href = "dashboard.html"; 
+            window.location.href = "dashboard.html"; 
         } else {
             document.getElementById('loginResult').style.color = "red";
             document.getElementById('loginResult').innerText = data.error || "Login failed.";
