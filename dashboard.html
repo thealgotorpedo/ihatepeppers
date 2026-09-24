@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Manager</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="container dashboard">
+
+        <h2>Contact Manager</h2>
+
+        <p id="welcomeMessage"></p>
+
+        <hr>
+
+        <h3>Your Contacts</h3>
+
+        <div class="contact-card">
+            <p><strong>Name:</strong> John Smith</p>
+            <p><strong>Phone:</strong> (407) 555-1234</p>
+            <p><strong>Email:</strong> johnsmith@email.com</p>
+        </div>
+
+        <div class="contact-card">
+            <p><strong>Name:</strong> Sarah Johnson</p>
+            <p><strong>Phone:</strong> (321) 555-9876</p>
+            <p><strong>Email:</strong> sarahj@email.com</p>
+        </div>
+
+        <button id="logoutButton">Logout</button>
+
+    </div>
+
+
+    <script>
+
+        // Get user information saved during login
+        const userId = sessionStorage.getItem("userId");
+        const firstName = sessionStorage.getItem("firstName");
+        const lastName = sessionStorage.getItem("lastName");
+
+
+        // If nobody is logged in, send them back to login page
+        if (!userId) {
+            window.location.href = "index.html";
+        }
+
+
+        // Display logged-in user's name
+        document.getElementById("welcomeMessage").innerText =
+            "Welcome, " + firstName + " " + lastName + "!";
+
+
+        // Logout button
+        document.getElementById("logoutButton").addEventListener("click", function() {
+
+            sessionStorage.clear();
+
+            window.location.href = "index.html";
+
+        });
+
+    </script>
+
+</body>
+</html>
