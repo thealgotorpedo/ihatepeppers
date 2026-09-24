@@ -46,6 +46,9 @@ try {
 
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["id" => 0, "error" => "Server database error."]);
+    echo json_encode([
+        "id" => 0,
+        "error" => $e->getMessage()
+    ]);
 }
 ?>
