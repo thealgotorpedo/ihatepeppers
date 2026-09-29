@@ -19,29 +19,32 @@ $login = trim($inData['login']);
 $password = $inData['password'];
 
 try {
-    $sql = "SELECT id, firstName, lastName, password FROM users WHERE login = ?";
+    $sql = "SELECT id, firstName, lastName, password, isAdmin, isSuspended FROM users WHERE login = ?";
     $stmt = $conn->prepare($sql);
     $stmt->execute([$login]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
-        // Successful login: 200 OK
+        
+        // Block suspended users immediately
+        if ($user['isSuspended']) {
+            http_response_code(403);
+            echo json_encode(["id" => 0, "error" => "Account suspended by administrator."]);
+            exit();
+        }
+
+        // Successful login
         http_response_code(200);
         echo json_encode([
             "id" => (int)$user['id'],
             "firstName" => $user['firstName'],
             "lastName" => $user['lastName'],
+            "isAdmin" => (bool)$user['isAdmin'],
             "error" => ""
         ]);
     } else {
-        // Failed login: 401 Unauthorized
         http_response_code(401);
-        echo json_encode([
-            "id" => 0,
-            "firstName" => "",
-            "lastName" => "",
-            "error" => "Invalid credentials."
-        ]);
+        echo json_encode(["id" => 0, "error" => "Invalid credentials."]);
     }
 
 } catch (PDOException $e) {
