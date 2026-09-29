@@ -86,7 +86,7 @@ async function searchContacts() {
                         <p><strong>Name:</strong> ${contact.firstName} ${contact.lastName}</p>
                         <p><strong>Phone:</strong> ${contact.phone}</p>
                         <p><strong>Email:</strong> ${contact.email}</p>
-                        <p style="color: #b91c1c;"><strong>Hates:</strong> ${contact.hatedPepper} Peppers</p>
+                        <p style="color: #b91c1c;"><strong>Hates:</strong> ${contact.hated_pepper} Peppers</p>
                         <div style="margin-top: 10px; display: flex; gap: 10px;">
                             <button onclick="editContact(${contact.id})" style="background: #fbbf24; color: #000; padding: 6px 12px;">Edit</button>
                             <button onclick="deleteContact(${contact.id})" style="background: #ef4444; padding: 6px 12px;">Delete</button>
