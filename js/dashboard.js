@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById("welcomeMessage").innerText = `Welcome, ${firstName}!`;
 
-    // Reveal admin tools if user logged in as admin
     if (isAdmin === "true") {
         document.getElementById("adminPanel").style.display = "block";
     }
@@ -21,8 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById("addContactForm").addEventListener("submit", addContact);
-    
-    // Load initial contacts
     searchContacts();
 });
 
@@ -51,7 +48,7 @@ async function addContact(event) {
             document.getElementById('addResult').style.color = "green";
             document.getElementById('addResult').innerText = "Contact Added!";
             document.getElementById('addContactForm').reset();
-            searchContacts(); // Refresh list
+            searchContacts(); 
         } else {
             document.getElementById('addResult').style.color = "red";
             document.getElementById('addResult').innerText = data.error;
@@ -83,13 +80,29 @@ async function searchContacts() {
             data.results.forEach(contact => {
                 list.innerHTML += `
                     <div class="contact-card" id="card-${contact.id}">
-                        <p><strong>Name:</strong> ${contact.firstName} ${contact.lastName}</p>
-                        <p><strong>Phone:</strong> ${contact.phone}</p>
-                        <p><strong>Email:</strong> ${contact.email}</p>
-                        <p style="color: #b91c1c;"><strong>Hates:</strong> ${contact.hated_pepper} Peppers</p>
-                        <div style="margin-top: 10px; display: flex; gap: 10px;">
-                            <button onclick="editContact(${contact.id})" style="background: #fbbf24; color: #000; padding: 6px 12px;">Edit</button>
-                            <button onclick="deleteContact(${contact.id})" style="background: #ef4444; padding: 6px 12px;">Delete</button>
+                        <!-- VIEW MODE -->
+                        <div id="view-${contact.id}">
+                            <p><strong>Name:</strong> ${contact.firstName} ${contact.lastName}</p>
+                            <p><strong>Phone:</strong> ${contact.phone}</p>
+                            <p><strong>Email:</strong> ${contact.email}</p>
+                            <p style="color: #b91c1c;"><strong>Hates:</strong> ${contact.hated_pepper} Peppers</p>
+                            <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                <button onclick="enableEdit(${contact.id})" style="background: #fbbf24; color: #000; padding: 6px 12px;">Edit</button>
+                                <button onclick="deleteContact(${contact.id})" style="background: #ef4444; padding: 6px 12px;">Delete</button>
+                            </div>
+                        </div>
+
+                        <!-- EDIT MODE (Hidden by default) -->
+                        <div id="edit-${contact.id}" style="display: none; flex-direction: column; gap: 8px;">
+                            <input type="text" id="editFirst-${contact.id}" value="${contact.firstName}" placeholder="First Name">
+                            <input type="text" id="editLast-${contact.id}" value="${contact.lastName}" placeholder="Last Name">
+                            <input type="tel" id="editPhone-${contact.id}" value="${contact.phone}" placeholder="Phone">
+                            <input type="email" id="editEmail-${contact.id}" value="${contact.email}" placeholder="Email">
+                            <input type="text" id="editPepper-${contact.id}" value="${contact.hated_pepper}" placeholder="Hated Pepper">
+                            <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                <button onclick="saveContact(${contact.id})" style="background: #10b981; color: #fff; padding: 6px 12px;">Save</button>
+                                <button onclick="cancelEdit(${contact.id})" style="background: #6b7280; padding: 6px 12px;">Cancel</button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -102,6 +115,39 @@ async function searchContacts() {
     }
 }
 
+// Toggles the card into Edit Mode
+function enableEdit(id) {
+    document.getElementById(`view-${id}`).style.display = 'none';
+    document.getElementById(`edit-${id}`).style.display = 'flex';
+}
+
+// Toggles the card back to View Mode without saving
+function cancelEdit(id) {
+    document.getElementById(`view-${id}`).style.display = 'block';
+    document.getElementById(`edit-${id}`).style.display = 'none';
+}
+
+// Gathers the new input values and sends them to the database
+async function saveContact(id) {
+    const payload = {
+        id: id,
+        firstName: document.getElementById(`editFirst-${id}`).value,
+        lastName: document.getElementById(`editLast-${id}`).value,
+        phone: document.getElementById(`editPhone-${id}`).value,
+        email: document.getElementById(`editEmail-${id}`).value,
+        hatedPepper: document.getElementById(`editPepper-${id}`).value
+    };
+
+    await fetch('api/edit.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    
+    // Refresh the list to show the updated database information
+    searchContacts();
+}
+
 async function deleteContact(contactId) {
     if(!confirm("Are you sure you want to delete this contact?")) return;
     
@@ -111,27 +157,7 @@ async function deleteContact(contactId) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     });
-    searchContacts(); // Refresh list
-}
-
-async function editContact(contactId) {
-    // For presentation demo purposes, prompts are the fastest way to showcase live editing
-    const newFirst = prompt("Enter new First Name:");
-    if (!newFirst) return; // Cancelled
-    const newPepper = prompt("What pepper do they hate now?");
-    
-    const payload = {
-        id: contactId,
-        firstName: newFirst,
-        hatedPepper: newPepper
-    };
-
-    await fetch('api/edit.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
-    searchContacts();
+    searchContacts(); 
 }
 
 // --- Admin Features ---
