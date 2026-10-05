@@ -7,55 +7,62 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="container dashboard">
+    <div class="container dashboard" style="max-width: 800px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h2 id="welcomeMessage" style="margin-bottom: 0;">Contact Manager</h2>
             <button id="logoutButton" style="background-color: #ef4444; margin-top: 0; padding: 8px 16px;">Logout</button>
         </div>
         <hr>
 
-        <!-- Admin Control Panel -->
-        <div id="adminPanel" style="display: none; background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            <h3 style="color: #991b1b; margin-bottom: 10px;">Admin Tools</h3>
-            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <input type="text" id="suspendUsername" placeholder="Username to Suspend" style="flex: 1;">
-                <button onclick="suspendUser()" style="background-color: #b91c1c; margin: 0;">Suspend</button>
+        <!-- STANDARD USER VIEW -->
+        <div id="userView" style="display: none;">
+            <h3>Add New Contact</h3>
+            <form id="addContactForm" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="contactFirst" placeholder="First Name" required style="flex: 1 1 45%;">
+                <input type="text" id="contactLast" placeholder="Last Name" required style="flex: 1 1 45%;">
+                <input type="tel" id="contactPhone" placeholder="Phone" style="flex: 1 1 45%;">
+                <input type="email" id="contactEmail" placeholder="Email" style="flex: 1 1 45%;">
+                <input type="text" id="contactPepper" placeholder="What pepper do they hate?" required style="flex: 1 1 100%;">
+                <button type="submit" style="flex: 1 1 100%; margin-top: 0;">Add Contact</button>
+            </form>
+            <p id="addResult" style="text-align: center; font-weight: bold;"></p>
+            <hr>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
+                <h3 style="margin: 0;">Your Contacts</h3>
+                <input type="text" id="searchInput" placeholder="Search names..." style="flex: 1; margin-left: auto;">
+                <button onclick="searchContacts()" style="margin: 0;">Search</button>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="changePassUsername" placeholder="Username" style="flex: 1;">
-                <input type="password" id="changePassNew" placeholder="New Password" style="flex: 1;">
-                <button onclick="changePassword()" style="background-color: #b91c1c; margin: 0;">Update Pass</button>
-            </div>
-            <p id="adminResult" style="color: #991b1b; margin-top: 10px; font-size: 0.9rem; text-align: center;"></p>
+            <div id="contactsList"><p style="text-align: center; color: #6b7280;">Loading contacts...</p></div>
         </div>
 
-        <!-- Add Contact Section -->
-        <h3>Add New Contact</h3>
-        <form id="addContactForm" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-            <input type="text" id="contactFirst" placeholder="First Name" required style="flex: 1 1 45%;">
-            <input type="text" id="contactLast" placeholder="Last Name" required style="flex: 1 1 45%;">
-            <input type="tel" id="contactPhone" placeholder="Phone" style="flex: 1 1 45%;">
-            <input type="email" id="contactEmail" placeholder="Email" style="flex: 1 1 45%;">
-            <input type="text" id="contactPepper" placeholder="What pepper do they hate?" required style="flex: 1 1 100%;">
-            <button type="submit" style="flex: 1 1 100%; margin-top: 0;">Add Contact</button>
-        </form>
-        <p id="addResult" style="text-align: center; margin-bottom: 20px; font-weight: bold;"></p>
+        <!-- ADMIN VIEW -->
+        <div id="adminView" style="display: none;">
+            <h3>Platform Management</h3>
+            
+            <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: #991b1b; margin-bottom: 10px;">Create New Admin</h4>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="newAdminFirst" placeholder="First Name" style="flex: 1;">
+                    <input type="text" id="newAdminLast" placeholder="Last Name" style="flex: 1;">
+                    <input type="text" id="newAdminUser" placeholder="Username" style="flex: 1;">
+                    <input type="password" id="newAdminPass" placeholder="Password" style="flex: 1;">
+                    <button onclick="createAdmin()" style="margin: 0; background-color: #b91c1c;">Create</button>
+                </div>
+                <p id="adminCreateResult" style="color: #991b1b; font-size: 0.9rem; margin-top: 5px;"></p>
+            </div>
 
-        <hr>
-
-        <!-- Search Section -->
-        <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
-            <h3 style="margin: 0;">Contacts Directory</h3>
-            <input type="text" id="searchInput" placeholder="Search names..." style="flex: 1; margin-left: auto;">
-            <button onclick="searchContacts()" style="margin: 0;">Search</button>
-        </div>
-
-        <!-- Dynamic Contacts List -->
-        <div id="contactsList">
-            <p style="text-align: center; color: #6b7280;">Loading contacts...</p>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
+                <h4 style="margin: 0;">Global Database Query</h4>
+                <input type="text" id="adminContactSearch" placeholder="Search any user or entry..." style="flex: 1;">
+                <button onclick="adminGlobalSearch()" style="margin: 0;">Search All</button>
+            </div>
+            <div id="adminContactsList" style="margin-bottom: 20px;"></div>
+            
+            <hr>
+            <h4 style="margin-bottom: 15px;">All Registered Users</h4>
+            <div id="usersList"></div>
         </div>
     </div>
-
     <script src="js/dashboard.js"></script>
 </body>
 </html>
