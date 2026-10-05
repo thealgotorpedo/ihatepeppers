@@ -27,7 +27,7 @@ async function doLogin(event) {
             sessionStorage.setItem("lastName", data.lastName);
             
             // Assume the API returns an 'isAdmin' boolean confirming their admin status
-            sessionStorage.setItem("isAdmin", payload.isAdminRequest ? "true" : "false");
+            sessionStorage.setItem("isAdmin", data.isAdmin);
 
             window.location.href = "dashboard.html"; 
         } else {
