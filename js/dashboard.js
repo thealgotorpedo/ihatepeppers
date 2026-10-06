@@ -134,15 +134,39 @@ async function adminGlobalSearch() {
     const list = document.getElementById('adminContactsList');
     list.innerHTML = "";
     
-    if (data.results.length === 0) list.innerHTML = "<p>No entries found.</p>";
-    data.results.forEach(c => {
+    if (data.results.length === 0) {
+        list.innerHTML = "<p>No users found.</p>";
+        return;
+    }
+
+    data.results.forEach(u => {
+        const role = u.isAdmin ? "Admin" : "Standard User";
+        const status = u.isSuspended ? "Suspended" : "Active";
+        const statusColor = u.isSuspended ? "#ef4444" : "#10b981";
+        const toggleAction = u.isSuspended ? 0 : 1;
+        const toggleText = u.isSuspended ? "Unsuspend" : "Suspend";
+
         list.innerHTML += `
-            <div class="contact-card" style="border-left: 4px solid #4f46e5;">
-                <p><strong>Owner:</strong> ${c.owner} | <strong>Contact:</strong> ${c.firstName} ${c.lastName}</p>
-                <p><strong>Phone:</strong> ${c.phone} | <strong>Email:</strong> ${c.email}</p>
-                <p style="color: #b91c1c;"><strong>Hates:</strong> ${c.hated_pepper}</p>
+            <div class="contact-card" style="border-left: 4px solid #4f46e5; background: #f3f4f6;">
+                <p><strong>${u.login}</strong> (${u.firstName} ${u.lastName})</p>
+                <p>Role: ${role} | Status: <strong style="color: ${statusColor};">${status}</strong></p>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <input type="password" id="search-pass-${u.login}" placeholder="New Password" style="padding: 6px;">
+                    <button onclick="changeSearchPassword('${u.login}')" style="background: #fbbf24; color: #000; padding: 6px 12px; margin: 0;">Update Pass</button>
+                    <button onclick="toggleSuspend('${u.login}', ${toggleAction})" style="background: #ef4444; padding: 6px 12px; margin: 0;">${toggleText}</button>
+                </div>
             </div>`;
     });
+}
+
+// Helper to handle password updates exclusively from the search results block
+async function changeSearchPassword(targetLogin) {
+    const newPass = document.getElementById(`search-pass-${targetLogin}`).value;
+    if (!newPass) return alert("Enter a new password first.");
+    const payload = { targetLogin: targetLogin, newPassword: newPass };
+    await fetch('api/admin_password.php', { method: 'POST', body: JSON.stringify(payload) });
+    alert(`Password updated for ${targetLogin}`);
+    document.getElementById(`search-pass-${targetLogin}`).value = "";
 }
 
 async function loadAllUsers() {
@@ -175,6 +199,10 @@ async function toggleSuspend(targetLogin, newState) {
     const payload = { targetLogin: targetLogin, state: newState };
     await fetch('api/suspend.php', { method: 'POST', body: JSON.stringify(payload) });
     loadAllUsers();
+    // Re-trigger search to update suspension status visually if a search is active
+    if (document.getElementById('adminContactSearch').value) {
+        adminGlobalSearch();
+    }
 }
 
 async function changePassword(targetLogin) {
@@ -183,4 +211,5 @@ async function changePassword(targetLogin) {
     const payload = { targetLogin: targetLogin, newPassword: newPass };
     await fetch('api/admin_password.php', { method: 'POST', body: JSON.stringify(payload) });
     alert(`Password updated for ${targetLogin}`);
+    document.getElementById(`pass-${targetLogin}`).value = "";
 }
