@@ -1,72 +1,91 @@
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('loginForm').addEventListener('submit', doLogin);
-    document.getElementById('registerForm').addEventListener('submit', doRegister);
-});
+async function login() {
+    const loginName = document.getElementById("loginName").value;
+    const loginPassword = document.getElementById("loginPassword").value;
+    const resultText = document.getElementById("loginResult");
 
-async function doLogin(event) {
-    event.preventDefault();
+    resultText.innerText = "";
+
+    if (!loginName || !loginPassword) {
+        resultText.innerText = "Please enter both username and password.";
+        return;
+    }
 
     const payload = {
-        login: document.getElementById('loginUsername').value,
-        password: document.getElementById('loginPassword').value,
-        isAdminRequest: document.getElementById('isAdmin').checked // Flags if user is trying to use Admin portal
+        login: loginName,
+        password: loginPassword
     };
 
     try {
-        const response = await fetch('api/login.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+        const response = await fetch("api/login.php", {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: { "Content-Type": "application/json" }
         });
 
         const data = await response.json();
 
-        if (response.ok && data.id > 0) {
+        if (data.error) {
+            resultText.innerText = data.error;
+        } else {
+            // Store variables in session, including the dynamic database admin flag
             sessionStorage.setItem("userId", data.id);
             sessionStorage.setItem("firstName", data.firstName);
             sessionStorage.setItem("lastName", data.lastName);
-            
-            // Assume the API returns an 'isAdmin' boolean confirming their admin status
             sessionStorage.setItem("isAdmin", data.isAdmin);
 
-            window.location.href = "dashboard.html"; 
-        } else {
-            document.getElementById('loginResult').style.color = "red";
-            document.getElementById('loginResult').innerText = data.error || "Login failed.";
+            // Redirect to the dashboard
+            window.location.href = "dashboard.html";
         }
-    } catch (err) {
-        document.getElementById('loginResult').innerText = "Network error connecting to API.";
+    } catch (error) {
+        resultText.innerText = "Connection error. Please try again.";
+        console.error(error);
     }
 }
 
-async function doRegister(event) {
-    event.preventDefault();
+async function register() {
+    const first = document.getElementById("regFirst").value;
+    const last = document.getElementById("regLast").value;
+    const user = document.getElementById("regUser").value;
+    const pass = document.getElementById("regPassword").value;
+    const resultText = document.getElementById("regResult");
+
+    resultText.style.color = "#ef4444"; 
+    resultText.innerText = "";
+
+    if (!first || !last || !user || !pass) {
+        resultText.innerText = "Please fill out all registration fields.";
+        return;
+    }
 
     const payload = {
-        firstName: document.getElementById('regFirstName').value,
-        lastName: document.getElementById('regLastName').value,
-        login: document.getElementById('regUsername').value,
-        password: document.getElementById('regPassword').value
+        firstName: first,
+        lastName: last,
+        login: user,
+        password: pass
     };
 
     try {
-        const response = await fetch('api/register.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+        const response = await fetch("api/register.php", {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: { "Content-Type": "application/json" }
         });
 
         const data = await response.json();
 
-        if (response.status === 201) {
-            document.getElementById('registerResult').style.color = "green";
-            document.getElementById('registerResult').innerText = data.message;
-            document.getElementById('registerForm').reset();
+        if (data.error) {
+            resultText.innerText = data.error;
         } else {
-            document.getElementById('registerResult').style.color = "red";
-            document.getElementById('registerResult').innerText = data.error || "Registration failed.";
+            resultText.style.color = "#10b981"; 
+            resultText.innerText = "Account created! You may now log in.";
+            
+            document.getElementById("regFirst").value = "";
+            document.getElementById("regLast").value = "";
+            document.getElementById("regUser").value = "";
+            document.getElementById("regPassword").value = "";
         }
-    } catch (err) {
-        document.getElementById('registerResult').innerText = "Network error connecting to API.";
+    } catch (error) {
+        resultText.innerText = "Connection error. Please try again.";
+        console.error(error);
     }
 }
