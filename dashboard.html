@@ -7,30 +7,30 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="container dashboard" style="max-width: 800px;">
+    <div class="container dashboard" style="max-width: 800px; margin: 0 auto; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h2 id="welcomeMessage" style="margin-bottom: 0;">Contact Manager</h2>
-            <button id="logoutButton" style="background-color: #ef4444; margin-top: 0; padding: 8px 16px;">Logout</button>
+            <button id="logoutButton" style="background-color: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Logout</button>
         </div>
-        <hr>
+        <hr style="border-color: #333; margin: 20px 0;">
 
         <!-- STANDARD USER VIEW -->
         <div id="userView" style="display: none;">
             <h3>Add New Contact</h3>
             <form id="addContactForm" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="contactFirst" placeholder="First Name" required style="flex: 1 1 45%;">
-                <input type="text" id="contactLast" placeholder="Last Name" required style="flex: 1 1 45%;">
-                <input type="tel" id="contactPhone" placeholder="Phone" style="flex: 1 1 45%;">
-                <input type="email" id="contactEmail" placeholder="Email" style="flex: 1 1 45%;">
-                <input type="text" id="contactPepper" placeholder="What pepper do they hate?" required style="flex: 1 1 100%;">
-                <button type="submit" style="flex: 1 1 100%; margin-top: 0;">Add Contact</button>
+                <input type="text" id="contactFirst" placeholder="First Name" required style="flex: 1 1 45%; padding: 8px; border-radius: 4px; border: 1px solid #444; background: transparent; color: white;">
+                <input type="text" id="contactLast" placeholder="Last Name" required style="flex: 1 1 45%; padding: 8px; border-radius: 4px; border: 1px solid #444; background: transparent; color: white;">
+                <input type="tel" id="contactPhone" placeholder="Phone" style="flex: 1 1 45%; padding: 8px; border-radius: 4px; border: 1px solid #444; background: transparent; color: white;">
+                <input type="email" id="contactEmail" placeholder="Email" style="flex: 1 1 45%; padding: 8px; border-radius: 4px; border: 1px solid #444; background: transparent; color: white;">
+                <input type="text" id="contactPepper" placeholder="What pepper do they hate?" required style="flex: 1 1 100%; padding: 8px; border-radius: 4px; border: 1px solid #444; background: transparent; color: white;">
+                <button type="submit" style="flex: 1 1 100%; padding: 10px; background-color: #2525a5; color: white; border: none; border-radius: 4px; cursor: pointer;">Add Contact</button>
             </form>
             <p id="addResult" style="text-align: center; font-weight: bold;"></p>
-            <hr>
-            <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
+            <hr style="border-color: #333; margin: 20px 0;">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
                 <h3 style="margin: 0;">Your Contacts</h3>
-                <input type="text" id="searchInput" placeholder="Search names..." style="flex: 1; margin-left: auto;">
-                <button onclick="searchContacts()" style="margin: 0;">Search</button>
+                <input type="text" id="searchInput" placeholder="Search names..." style="flex: 1; min-width: 200px; padding: 8px; border-radius: 4px; border: 1px solid #444; background: transparent; color: white;">
+                <button onclick="searchContacts()" style="padding: 8px 16px; background-color: #2525a5; color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>
             </div>
             <div id="contactsList"><p style="text-align: center; color: #6b7280;">Loading contacts...</p></div>
         </div>
@@ -39,28 +39,27 @@
         <div id="adminView" style="display: none;">
             <h3>Platform Management</h3>
             
-            <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h4 style="color: #991b1b; margin-bottom: 10px;">Create New Admin</h4>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="newAdminFirst" placeholder="First Name" style="flex: 1;">
-                    <input type="text" id="newAdminLast" placeholder="Last Name" style="flex: 1;">
-                    <input type="text" id="newAdminUser" placeholder="Username" style="flex: 1;">
-                    <input type="password" id="newAdminPass" placeholder="Password" style="flex: 1;">
-                    <button onclick="createAdmin()" style="margin: 0; background-color: #b91c1c;">Create</button>
+            <div style="background: #450a0a; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #7f1d1d;">
+                <h4 style="color: #fca5a5; margin-top: 0; margin-bottom: 10px;">Create New Admin</h4>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="text" id="newAdminFirst" placeholder="First Name" style="flex: 1 1 150px; padding: 8px; border-radius: 4px; border: 1px solid #7f1d1d; background: rgba(0,0,0,0.2); color: white;">
+                    <input type="text" id="newAdminLast" placeholder="Last Name" style="flex: 1 1 150px; padding: 8px; border-radius: 4px; border: 1px solid #7f1d1d; background: rgba(0,0,0,0.2); color: white;">
+                    <input type="text" id="newAdminUser" placeholder="Username" style="flex: 1 1 150px; padding: 8px; border-radius: 4px; border: 1px solid #7f1d1d; background: rgba(0,0,0,0.2); color: white;">
+                    <input type="password" id="newAdminPass" placeholder="Password" style="flex: 1 1 150px; padding: 8px; border-radius: 4px; border: 1px solid #7f1d1d; background: rgba(0,0,0,0.2); color: white;">
+                    <button onclick="createAdmin()" style="flex: 1 1 100px; padding: 8px; background-color: #b91c1c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Create</button>
                 </div>
-                <p id="adminCreateResult" style="color: #991b1b; font-size: 0.9rem; margin-top: 5px;"></p>
+                <p id="adminCreateResult" style="color: #fca5a5; font-size: 0.9rem; margin-top: 10px; margin-bottom: 0;"></p>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center;">
-                <h4 style="margin: 0;">Global Database Query</h4>
-                <input type="text" id="adminContactSearch" placeholder="Search any user or entry..." style="flex: 1;">
-                <button onclick="adminGlobalSearch()" style="margin: 0;">Search All</button>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+                <h4 style="margin: 0; white-space: nowrap;">Global Database Query</h4>
+                <input type="text" id="adminContactSearch" placeholder="Search any user or entry..." style="flex: 1; min-width: 200px; padding: 8px; border-radius: 4px; border: 1px solid #444; background: transparent; color: white;">
+                <button onclick="adminGlobalSearch()" style="padding: 8px 16px; background-color: #2525a5; color: white; border: none; border-radius: 4px; cursor: pointer;">Search All</button>
             </div>
-            <div id="adminContactsList" style="margin-bottom: 20px;"></div>
+            <div id="adminContactsList" style="margin-bottom: 30px;"></div>
             
-            <hr>
             <h4 style="margin-bottom: 15px;">All Registered Users</h4>
-            <div id="usersList"></div>
+            <div id="usersList" style="display: flex; flex-direction: column; gap: 15px;"></div>
         </div>
     </div>
     <script src="js/dashboard.js"></script>
